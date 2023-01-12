@@ -11,6 +11,14 @@ const routes = [
         },
       },
       { path: "login", component: () => import("pages/LoginPage.vue") },
+      { path: "register", component: () => import("pages/RegisterPage.vue") },
+      {
+        path: "/:id",
+        component: () => import("src/pages/EditUrlPage.vue"),
+        meta: {
+          auth: true,
+        },
+      },
       {
         path: "protected",
         component: () => import("pages/ProtectedPage.vue"),

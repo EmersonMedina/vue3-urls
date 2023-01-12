@@ -6,11 +6,23 @@ export const useUserStore = defineStore("user", () => {
   const token = ref(null);
   const expiresIn = ref(null);
 
-  const access = async () => {
+  const register = async (email, password, confirmPassword) => {
+    try {
+      const res = await api.post("/auth/register", {
+        email,
+        password,
+        confirmPassword,
+      });
+    } catch (error) {
+      if (error.response) throw error.response.data;
+    }
+  };
+
+  const access = async (email, password) => {
     try {
       const res = await api.post("/auth/login", {
-        email: "emersonmedina877@gmail.com",
-        password: "Davidmedina*2018",
+        email,
+        password,
       });
 
       token.value = res.data.token;
@@ -18,7 +30,7 @@ export const useUserStore = defineStore("user", () => {
       localStorage.setItem("user", true);
       setTime();
     } catch (error) {
-      console.error(error);
+      if (error.response) throw error.response.data;
     }
   };
 
@@ -63,5 +75,6 @@ export const useUserStore = defineStore("user", () => {
     access,
     refreshToken,
     logout,
+    register,
   };
 });

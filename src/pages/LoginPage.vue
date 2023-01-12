@@ -1,12 +1,9 @@
 <script setup>
-import { useUserStore } from "../stores/user-store";
-
-const userStore = useUserStore();
+import FormLogin from "../components/FormEmailPassword.vue";
 </script>
 
 <template>
-  <h3>Login</h3>
-  {{ userStore.token }}
+  <FormLogin formName="Login" :showRepassword="false"> </FormLogin>
 </template>
 
 <style lang="scss" scoped></style>
