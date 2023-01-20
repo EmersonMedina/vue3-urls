@@ -22,7 +22,7 @@ const linksWithouthToken = [
     link: "/login",
   },
   {
-    title: "Register",
+    title: "Registrarse",
     caption: "Registrate en el sistema",
     icon: mdiAccountPlus,
     link: "/register",

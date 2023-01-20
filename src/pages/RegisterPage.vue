@@ -3,5 +3,7 @@ import FormRegister from "../components/FormEmailPassword.vue";
 </script>
 
 <template>
-  <FormRegister formName="Register" :showRepassword="true"> </FormRegister>
+  <q-page padding>
+    <FormRegister formName="Register" :showRepassword="true"> </FormRegister>
+  </q-page>
 </template>
