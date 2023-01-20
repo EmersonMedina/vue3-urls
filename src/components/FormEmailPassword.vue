@@ -6,9 +6,9 @@ import { alert } from "../utils/notifications.js";
 
 const router = useRouter();
 const userStore = useUserStore();
-const email = ref("emermedina877@gmail.com");
-const password = ref("Davidmedina*2018");
-const repassword = ref("Davidmedina*2018");
+const email = ref("test10@gmail.com");
+const password = ref("Test10*2023");
+const repassword = ref("Test10*2023");
 
 const props = defineProps({
   formName: {
