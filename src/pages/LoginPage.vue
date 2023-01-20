@@ -3,7 +3,9 @@ import FormLogin from "../components/FormEmailPassword.vue";
 </script>
 
 <template>
-  <FormLogin formName="Login" :showRepassword="false"> </FormLogin>
+  <q-page padding>
+    <FormLogin formName="Login" :showRepassword="false" />
+  </q-page>
 </template>
 
 <style lang="scss" scoped></style>

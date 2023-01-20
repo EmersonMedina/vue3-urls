@@ -7,11 +7,11 @@ const route = useRoute();
 
 const { id } = route.params;
 
-const getURL = async () => {
-  URL.value = await URLStore.getURL(id);
-};
+// const getURL = async () => {
+//   URL.value = await URLStore.getURL(id);
+// };
 
-// getURL();
+// // getURL();
 </script>
 
 <template>

@@ -38,6 +38,8 @@ export default route(function (/* { store, ssrContext } */) {
   const userStore = useUserStore();
 
   Router.beforeEach(async (to, from, next) => {
+    if (to.path === "/") return next("/howitworks");
+
     const requireAuth = to.meta.auth;
 
     if (userStore.token) return next();

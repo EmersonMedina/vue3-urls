@@ -44,7 +44,7 @@ const handleSubmit = async () => {
 
 <template>
   <q-page class="row justify-center">
-    <div class="col-12 col-sm-6 col-md-5">
+    <div class="col-12 col-sm-8 col-md-6">
       <h3 class="text-center q-pa-sm bg-info shadow-6">{{ props.formName }}</h3>
       <q-form @submit.prevent="handleSubmit">
         <q-input
@@ -56,6 +56,7 @@ const handleSubmit = async () => {
               (val && /^[^@]+@[^@]+\.[a-zA-Z]{2,}$/.test(val)) ||
               'Ingrese un email válido',
           ]"
+          lazy-rules
         >
         </q-input>
         <q-input
@@ -66,6 +67,7 @@ const handleSubmit = async () => {
             (val) =>
               (val && val.length > 5) || 'Contraseña minimo 6 caracteres',
           ]"
+          lazy-rules
         ></q-input>
         <q-input
           v-if="props.showRepassword"
@@ -76,6 +78,7 @@ const handleSubmit = async () => {
             (val) =>
               (val && val === password) || 'Las contraseñas deben ser iguales',
           ]"
+          lazy-rules
         ></q-input>
         <div>
           <q-btn :label="props.formName" type="submit"></q-btn>

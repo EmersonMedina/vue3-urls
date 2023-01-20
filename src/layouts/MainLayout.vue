@@ -3,53 +3,54 @@ import { ref } from "vue";
 import { useUserStore } from "../stores/user-store";
 import EssentialLink from "components/EssentialLink.vue";
 import { useRouter } from "vue-router";
+import {
+  mdiLogoutVariant,
+  mdiHomeOutline,
+  mdiAccountPlus,
+  mdiHeadQuestionOutline,
+} from "@quasar/extras/mdi-v6";
 
 const router = useRouter();
 
 const userStore = useUserStore();
 
-const essentialLinks = [
+const linksWithouthToken = [
   {
-    title: "Docs",
-    caption: "quasar.dev",
-    icon: "school",
-    link: "https://quasar.dev",
+    title: "Login",
+    caption: "Ingresa al sistema",
+    icon: "login",
+    link: "/login",
   },
   {
-    title: "Github",
-    caption: "github.com/quasarframework",
-    icon: "code",
-    link: "https://github.com/quasarframework",
+    title: "Register",
+    caption: "Registrate en el sistema",
+    icon: mdiAccountPlus,
+    link: "/register",
   },
   {
-    title: "Discord Chat Channel",
-    caption: "chat.quasar.dev",
-    icon: "chat",
-    link: "https://chat.quasar.dev",
+    title: "¿Cómo funciona?",
+    icon: mdiHeadQuestionOutline,
+    link: "/howitworks",
+  },
+];
+
+const linksWithToken = [
+  {
+    title: "Inicio",
+    caption: "Administra tus links",
+    icon: mdiHomeOutline,
+    link: "/inicio",
   },
   {
-    title: "Forum",
-    caption: "forum.quasar.dev",
-    icon: "record_voice_over",
-    link: "https://forum.quasar.dev",
+    title: "¿Cómo funciona?",
+    icon: mdiHeadQuestionOutline,
+    link: "/howitworks",
   },
   {
-    title: "Twitter",
-    caption: "@quasarframework",
-    icon: "rss_feed",
-    link: "https://twitter.quasar.dev",
-  },
-  {
-    title: "Facebook",
-    caption: "@QuasarFramework",
-    icon: "public",
-    link: "https://facebook.quasar.dev",
-  },
-  {
-    title: "Quasar Awesome",
-    caption: "Community Quasar projects",
-    icon: "favorite",
-    link: "https://awesome.quasar.dev",
+    title: "Logout",
+    icon: mdiLogoutVariant,
+    link: "",
+    isLogout: true,
   },
 ];
 
@@ -59,15 +60,51 @@ const toggleLeftDrawer = () => {
   leftDrawerOpen.value = !leftDrawerOpen.value;
 };
 
-const logout = async () => {
-  await userStore.logout();
-  router.push("/login");
+if (userStore.userInfo != null) {
+  if (userStore.userInfo.photoURL != "" && userStore.userInfo.photoURL != null)
+    userStore.URLProfileImage = userStore.userInfo.photoURL;
+
+  if (userStore.userInfo.name != "" && userStore.userInfo.name != null) {
+    userStore.userName = userStore.userInfo.name;
+
+    const fullName = userStore.userInfo.name.split(" ");
+
+    if (fullName.length > 1)
+      userStore.userName = fullName[0] + " " + fullName[1];
+    else userStore.userName = fullName[0];
+  }
+}
+
+if (userStore.userInfo === null) {
+  const userInfo = JSON.parse(window.localStorage.getItem("userInfo"));
+
+  if (userInfo != null) {
+    if (userInfo.photoURL != "" && userInfo.photoURL != null)
+      userStore.URLProfileImage = userInfo.photoURL;
+
+    if (userInfo.name != "" && userInfo.name != null) {
+      userStore.userName = userInfo.name;
+      const fullName = userInfo.name.split(" ");
+
+      if (fullName.length > 1)
+        userStore.userName = fullName[0] + " " + fullName[1];
+      else userStore.userName = fullName[0];
+    }
+  }
+}
+
+const redirectHome = () => {
+  router.push("/inicio");
+};
+
+const redirectToEditProfilePage = () => {
+  router.push("/profile");
 };
 </script>
 
 <template>
   <q-layout view="lHh Lpr lFf">
-    <q-header elevated>
+    <q-header elevated class="bg-secondary text-white">
       <q-toolbar>
         <q-btn
           flat
@@ -78,44 +115,68 @@ const logout = async () => {
           @click="toggleLeftDrawer"
         />
 
-        <q-toolbar-title> Quasar App </q-toolbar-title>
+        <q-toolbar-title style="cursor: pointer" @click="redirectHome">
+          NANO LINKS
+        </q-toolbar-title>
 
-        <q-btn color="black" class="q-mr-sm" to="/Inicio" v-if="userStore.token"
-          >Inicio</q-btn
+        <div
+          class="q-gutter-sm q-mr-sm"
+          v-if="userStore.token && userStore.userName != null"
         >
-        <q-btn color="green" class="q-mr-sm" to="/login" v-if="!userStore.token"
-          >Login</q-btn
+          <q-chip>
+            <q-avatar
+              v-if="userStore.token"
+              class="q-mr-sm"
+              style="cursor: pointer"
+            >
+              <img
+                @click="redirectToEditProfilePage"
+                :src="userStore.URLProfileImage"
+              />
+              <q-tooltip class="bg-indigo" :offset="[10, 10]">
+                Editar perfil
+              </q-tooltip>
+            </q-avatar>
+            {{ userStore.userName }}
+          </q-chip>
+        </div>
+        <div
+          class="q-gutter-sm q-mr-sm"
+          v-if="userStore.token && userStore.userName === null"
         >
-        <q-btn
-          color="green"
-          class="q-mr-sm"
-          to="/register"
-          v-if="!userStore.token"
-          >Register</q-btn
-        >
-        <q-btn
-          color="red"
-          class="q-mr-sm"
-          @click="logout"
-          v-if="userStore.token"
-          >Logout</q-btn
-        >
-        <q-btn
-          color="brown"
-          class="q-mr-sm"
-          to="/protected"
-          v-if="userStore.token"
-          >Protected</q-btn
-        >
+          <q-avatar
+            v-if="userStore.token"
+            class="q-mr-sm"
+            style="cursor: pointer"
+          >
+            <img
+              @click="redirectToEditProfilePage"
+              :src="userStore.URLProfileImage"
+            />
+            <q-tooltip class="bg-indigo" :offset="[10, 10]">
+              Editar perfil
+            </q-tooltip>
+          </q-avatar>
+        </div>
       </q-toolbar>
     </q-header>
 
     <q-drawer v-model="leftDrawerOpen" show-if-above bordered>
-      <q-list>
-        <q-item-label header> Essential Links </q-item-label>
+      <q-list v-if="userStore.token">
+        <q-item-label header> Nano Links </q-item-label>
 
         <EssentialLink
-          v-for="link in essentialLinks"
+          v-for="link in linksWithToken"
+          :key="link.title"
+          v-bind="link"
+        />
+      </q-list>
+
+      <q-list v-if="!userStore.token">
+        <q-item-label header> Nano Links </q-item-label>
+
+        <EssentialLink
+          v-for="link in linksWithouthToken"
           :key="link.title"
           v-bind="link"
         />
